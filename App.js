@@ -87,10 +87,7 @@ class App extends React.Component {
         toDos: { ...prevState.toDos, ...newToDoObject },
         newToDo: ""
       };
-      const saveState = AsyncStorage.setItem(
-        "toDos",
-        JSON.stringify(newState.toDos)
-      );
+      this._saveState(newState.toDos);
       return { ...newState };
     });
   };
@@ -112,31 +109,32 @@ class App extends React.Component {
   };
   _completeToDo = id => {
     this.setState(prevState => {
-      return {
+      const newState = {
         ...prevState,
         toDos: {
           ...prevState.toDos,
-          [id]: {
-            ...prevState.toDos[id],
-            isCompleted: true
-          }
+          [id]: { ...prevState.toDos[id], isCompleted: true }
         }
       };
+      this._saveState(newState.toDos);
+      return { ...newState };
     });
   };
   _uncompleteToDo = id => {
     this.setState(prevState => {
-      return {
+      const newState = {
         ...prevState,
         toDos: {
           ...prevState.toDos,
-          [id]: {
-            ...prevState.toDos[id],
-            isCompleted: false
-          }
+          [id]: { ...prevState.toDos[id], isCompleted: false }
         }
       };
+      this._saveState(newState.toDos);
+      return { ...newState };
     });
+  };
+  _saveState = newToDos => {
+    const saveState = AsyncStorage.setItem("toDos", JSON.stringify(newToDos));
   };
 }
 
