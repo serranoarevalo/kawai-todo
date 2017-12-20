@@ -29,6 +29,7 @@ class App extends React.Component {
     };
   }
   componentDidMount() {
+    AsyncStorage.removeItem("toDos");
     this._loadTodos();
   }
   render() {
@@ -78,25 +79,27 @@ class App extends React.Component {
   };
   _addToDo = async () => {
     const { newToDo, toDos } = this.state;
-    let newState;
-    this.setState(prevState => {
-      const ID = uuidv1();
-      const newToDoObject = {
-        [ID]: {
-          id: ID,
-          isCompleted: false,
-          text: newToDo,
-          createdAt: Date.now()
-        }
-      };
-      newState = {
-        ...prevState,
-        toDos: { ...prevState.toDos, ...newToDoObject },
-        newToDo: ""
-      };
-      this._saveState(newState.toDos);
-      return { ...newState };
-    });
+    if (newToDo !== "") {
+      let newState;
+      this.setState(prevState => {
+        const ID = uuidv1();
+        const newToDoObject = {
+          [ID]: {
+            id: ID,
+            isCompleted: false,
+            text: newToDo,
+            createdAt: Date.now()
+          }
+        };
+        newState = {
+          ...prevState,
+          toDos: { ...prevState.toDos, ...newToDoObject },
+          newToDo: ""
+        };
+        this._saveState(newState.toDos);
+        return { ...newState };
+      });
+    }
   };
   _loadTodos = async () => {
     try {
