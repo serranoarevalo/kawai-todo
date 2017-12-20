@@ -53,7 +53,14 @@ class App extends React.Component {
             blurOnSubmit={true}
           />
           <ScrollView contentContainerStyle={styles.toDoList}>
-            {Object.values(toDos).map(toDo => <ToDo key={toDo.id} {...toDo} />)}
+            {Object.values(toDos).map(toDo => (
+              <ToDo
+                uncomplete={this._uncompleteToDo}
+                complete={this._completeToDo}
+                key={toDo.id}
+                {...toDo}
+              />
+            ))}
           </ScrollView>
         </View>
       </View>
@@ -102,6 +109,34 @@ class App extends React.Component {
     } catch (err) {
       console.log(err);
     }
+  };
+  _completeToDo = id => {
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        toDos: {
+          ...prevState.toDos,
+          [id]: {
+            ...prevState.toDos[id],
+            isCompleted: true
+          }
+        }
+      };
+    });
+  };
+  _uncompleteToDo = id => {
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        toDos: {
+          ...prevState.toDos,
+          [id]: {
+            ...prevState.toDos[id],
+            isCompleted: false
+          }
+        }
+      };
+    });
   };
 }
 

@@ -13,7 +13,7 @@ const { height, width } = Dimensions.get("window");
 class ToDo extends React.Component {
   static propTypes = {};
   render() {
-    const { id, text, isCompleted } = this.props;
+    const { id, text, isCompleted, uncomplete, complete } = this.props;
     return (
       <View style={styles.container}>
         <Text
@@ -24,7 +24,9 @@ class ToDo extends React.Component {
         >
           {text}
         </Text>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPressOut={() => (isCompleted ? uncomplete(id) : complete(id))}
+        >
           <View
             style={[
               styles.radio,
