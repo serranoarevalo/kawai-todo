@@ -8,51 +8,99 @@ import {
   Platform,
   TextInput,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
+  AsyncStorage,
+  KeyboardAvoidingView,
+  ScrollView
 } from "react-native";
+import { AppLoading } from "expo";
+import uuidv1 from "uuid/v1";
 
 const { height, width } = Dimensions.get("window");
 
 class App extends React.Component {
-  state = {
-    newTodo: ""
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      newToDo: "",
+      loadedToDos: false
+    };
+  }
+  componentDidMount() {
+    this._loadTodos();
+  }
   render() {
-    const { newTodo } = this.state;
+    const { newToDo, loadedToDos } = this.state;
+    console.log(this.state);
+    if (!loadedToDos) {
+      return <AppLoading />;
+    }
     return (
       <TouchableWithoutFeedback onPress={this._dismissKeyboard}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" />
+          <Text style={styles.title}>Kawai To Do</Text>
           <View style={styles.card}>
             <TextInput
-              value={newTodo}
-              style={newTodo}
-              onChangeText={this._controllNewTodo}
+              value={newToDo}
+              style={newToDo}
+              onChangeText={this._controllNewToDo}
               placeholderTextColor={"#999"}
               placeholder={"New To Do"}
-              onEndEditing={this._addToDo}
+              onSubmitEditing={this._addToDo}
               returnKeyType={"done"}
-              style={styles.newTodo}
+              style={styles.newToDo}
               blurOnSubmit={true}
             />
+            <KeyboardAvoidingView>
+              <ScrollView />
+            </KeyboardAvoidingView>
           </View>
         </View>
       </TouchableWithoutFeedback>
     );
   }
-  _controllNewTodo = text => {
+  _controllNewToDo = text => {
     this.setState({
-      newTodo: text
+      newToDo: text
     });
   };
   _dismissKeyboard = () => {
     Keyboard.dismiss();
   };
-  _addToDo = () => {
+  _addToDo = async () => {
+    const { newToDo, toDos } = this.state;
+    let newState;
     this._dismissKeyboard();
-    this.setState({
-      newTodo: ""
+    this.setState(prevState => {
+      const newToDoObject = {
+        id: uuidv1(),
+        isCompleted: false,
+        text: newToDo
+      };
+      newState = {
+        ...prevState,
+        toDos: [...prevState.toDos, newToDoObject],
+        newToDo: ""
+      };
+      const saveState = AsyncStorage.setItem(
+        "toDos",
+        JSON.stringify(newState.toDos)
+      );
+      return { ...newState };
     });
+  };
+  _loadTodos = async () => {
+    try {
+      const toDos = (await AsyncStorage.getItem("toDos")) || [];
+      const parsedToDos = JSON.parse(toDos);
+      this.setState({
+        loadedToDos: true,
+        toDos: parsedToDos
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 }
 
@@ -62,11 +110,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#F23657",
     alignItems: "center"
   },
+  title: {
+    marginTop: 50,
+    marginBottom: 30,
+    fontSize: 30,
+    color: "white",
+    fontWeight: "200"
+  },
   card: {
     flex: 1,
-    width: width - 50,
+    width: width - 25,
     backgroundColor: "white",
-    marginTop: 50,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     ...Platform.select({
@@ -84,7 +138,7 @@ const styles = StyleSheet.create({
       }
     })
   },
-  newTodo: {
+  newToDo: {
     padding: 20,
     borderBottomColor: "#bbb",
     borderBottomWidth: 1,
