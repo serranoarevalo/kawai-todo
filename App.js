@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import { AppLoading } from "expo";
 import uuidv1 from "uuid/v1";
+import ToDo from "./components/ToDo";
 
 const { height, width } = Dimensions.get("window");
 
@@ -23,41 +24,39 @@ class App extends React.Component {
     super(props);
     this.state = {
       newToDo: "",
-      loadedToDos: false
+      loadedToDos: false,
+      toDos: {}
     };
   }
   componentDidMount() {
     this._loadTodos();
   }
   render() {
-    const { newToDo, loadedToDos } = this.state;
-    console.log(this.state);
+    const { newToDo, loadedToDos, toDos } = this.state;
     if (!loadedToDos) {
       return <AppLoading />;
     }
     return (
-      <TouchableWithoutFeedback onPress={this._dismissKeyboard}>
-        <View style={styles.container}>
-          <StatusBar barStyle="light-content" />
-          <Text style={styles.title}>Kawai To Do</Text>
-          <View style={styles.card}>
-            <TextInput
-              value={newToDo}
-              style={newToDo}
-              onChangeText={this._controllNewToDo}
-              placeholderTextColor={"#999"}
-              placeholder={"New To Do"}
-              onSubmitEditing={this._addToDo}
-              returnKeyType={"done"}
-              style={styles.newToDo}
-              blurOnSubmit={true}
-            />
-            <KeyboardAvoidingView>
-              <ScrollView />
-            </KeyboardAvoidingView>
-          </View>
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" />
+        <Text style={styles.title}>Kawai To Do</Text>
+        <View style={styles.card}>
+          <TextInput
+            value={newToDo}
+            style={newToDo}
+            onChangeText={this._controllNewToDo}
+            placeholderTextColor={"#999"}
+            placeholder={"New To Do"}
+            onSubmitEditing={this._addToDo}
+            returnKeyType={"done"}
+            style={styles.newToDo}
+            blurOnSubmit={true}
+          />
+          <ScrollView contentContainerStyle={styles.toDoList}>
+            {Object.values(toDos).map(toDo => <ToDo key={toDo.id} {...toDo} />)}
+          </ScrollView>
         </View>
-      </TouchableWithoutFeedback>
+      </View>
     );
   }
   _controllNewToDo = text => {
@@ -71,16 +70,14 @@ class App extends React.Component {
   _addToDo = async () => {
     const { newToDo, toDos } = this.state;
     let newState;
-    this._dismissKeyboard();
     this.setState(prevState => {
+      const ID = uuidv1();
       const newToDoObject = {
-        id: uuidv1(),
-        isCompleted: false,
-        text: newToDo
+        [ID]: { id: ID, isCompleted: false, text: newToDo }
       };
       newState = {
         ...prevState,
-        toDos: [...prevState.toDos, newToDoObject],
+        toDos: { ...prevState.toDos, ...newToDoObject },
         newToDo: ""
       };
       const saveState = AsyncStorage.setItem(
@@ -92,12 +89,16 @@ class App extends React.Component {
   };
   _loadTodos = async () => {
     try {
-      const toDos = (await AsyncStorage.getItem("toDos")) || [];
-      const parsedToDos = JSON.parse(toDos);
-      this.setState({
-        loadedToDos: true,
-        toDos: parsedToDos
-      });
+      const toDos = await AsyncStorage.getItem("toDos");
+      if (toDos) {
+        const parsedToDos = JSON.parse(toDos);
+        this.setState({ loadedToDos: true, toDos: parsedToDos });
+      } else {
+        this.setState({
+          loadedToDos: true,
+          toDos: {}
+        });
+      }
     } catch (err) {
       console.log(err);
     }
@@ -142,7 +143,11 @@ const styles = StyleSheet.create({
     padding: 20,
     borderBottomColor: "#bbb",
     borderBottomWidth: 1,
-    fontSize: 20
+    fontSize: 25
+  },
+  toDoList: {
+    flex: 1,
+    alignItems: "center"
   }
 });
 
