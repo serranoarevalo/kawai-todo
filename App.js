@@ -1,11 +1,21 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  StatusBar,
+  Platform
+} from "react-native";
 
-export default class App extends React.Component {
+const { height, width } = Dimensions.get("window");
+
+class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
+        <StatusBar barStyle="light-content" />
+        <View style={styles.card} />
       </View>
     );
   }
@@ -14,8 +24,29 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#F23657",
+    alignItems: "center"
   },
+  card: {
+    flex: 1,
+    width: width - 50,
+    backgroundColor: "white",
+    marginTop: 50,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: "rgb(50, 50, 50)",
+        shadowOffset: {
+          height: -1,
+          width: 0
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 5
+      },
+      android: {}
+    })
+  }
 });
+
+export default App;
