@@ -16,14 +16,6 @@ class ToDo extends React.Component {
     const { id, text, isCompleted, uncomplete, complete } = this.props;
     return (
       <View style={styles.container}>
-        <Text
-          style={[
-            styles.text,
-            isCompleted ? styles.completedText : styles.uncompletedText
-          ]}
-        >
-          {text}
-        </Text>
         <TouchableOpacity
           onPressOut={() => (isCompleted ? uncomplete(id) : complete(id))}
         >
@@ -34,6 +26,14 @@ class ToDo extends React.Component {
             ]}
           />
         </TouchableOpacity>
+        <Text
+          style={[
+            styles.text,
+            isCompleted ? styles.completedText : styles.uncompletedText
+          ]}
+        >
+          {text}
+        </Text>
       </View>
     );
   }
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 20,
     marginVertical: 20,
-    marginHorizontal: 20
+    flex: 1
   },
   uncompletedText: { color: "#353839" },
   completedText: { color: "#bbb", textDecorationLine: "line-through" },
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     height: 30,
     borderWidth: 3,
     borderRadius: 15,
-    marginLeft: 30
+    marginRight: 30
   },
   radioComplete: {
     borderColor: "#bbb"

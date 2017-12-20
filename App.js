@@ -53,14 +53,16 @@ class App extends React.Component {
             blurOnSubmit={true}
           />
           <ScrollView contentContainerStyle={styles.toDoList}>
-            {Object.values(toDos).map(toDo => (
-              <ToDo
-                uncomplete={this._uncompleteToDo}
-                complete={this._completeToDo}
-                key={toDo.id}
-                {...toDo}
-              />
-            ))}
+            {Object.values(toDos)
+              .reverse()
+              .map(toDo => (
+                <ToDo
+                  uncomplete={this._uncompleteToDo}
+                  complete={this._completeToDo}
+                  key={toDo.id}
+                  {...toDo}
+                />
+              ))}
           </ScrollView>
         </View>
       </View>
@@ -80,7 +82,12 @@ class App extends React.Component {
     this.setState(prevState => {
       const ID = uuidv1();
       const newToDoObject = {
-        [ID]: { id: ID, isCompleted: false, text: newToDo }
+        [ID]: {
+          id: ID,
+          isCompleted: false,
+          text: newToDo,
+          createdAt: Date.now()
+        }
       };
       newState = {
         ...prevState,
