@@ -34,7 +34,11 @@ class App extends React.Component {
   render() {
     const { newToDo, loadedToDos, toDos } = this.state;
     if (!loadedToDos) {
-      return <AppLoading />;
+      return (
+        <AppLoading>
+          <StatusBar barStyle="light-content" />
+        </AppLoading>
+      );
     }
     return (
       <View style={styles.container}>
