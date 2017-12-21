@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     marginVertical: 20
   },
   input: {
-    width: width / 1.5,
+    width: width / 2,
     marginVertical: 15,
     paddingBottom: 5
   },
@@ -159,7 +159,8 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   actionContainer: {
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    marginVertical: 10
   },
   actionText: {
     fontSize: 15

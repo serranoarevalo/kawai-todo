@@ -51,6 +51,7 @@ class App extends React.Component {
             returnKeyType={"done"}
             style={styles.newToDo}
             blurOnSubmit={true}
+            autoCorrect={false}
           />
           <ScrollView contentContainerStyle={styles.toDoList}>
             {Object.values(toDos)
@@ -81,7 +82,9 @@ class App extends React.Component {
   _addToDo = async () => {
     const { newToDo, toDos } = this.state;
     if (newToDo !== "") {
-      let newState;
+      this.setState({
+        newToDo: ""
+      });
       this.setState(prevState => {
         const ID = uuidv1();
         const newToDoObject = {
@@ -92,10 +95,9 @@ class App extends React.Component {
             createdAt: Date.now()
           }
         };
-        newState = {
+        const newState = {
           ...prevState,
-          toDos: { ...prevState.toDos, ...newToDoObject },
-          newToDo: ""
+          toDos: { ...prevState.toDos, ...newToDoObject }
         };
         this._saveState(newState.toDos);
         return { ...newState };
