@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "kawai-todo",
-    "description": "This project is really great.",
+    "name": "Kawai To Do",
+    "description": "Yet another To Do app, just a little bit Kawai",
     "slug": "kawai-todo",
     "privacy": "public",
     "sdkVersion": "24.0.0",
@@ -16,6 +16,9 @@
     },
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "co.nomacoders.kawaitodo"
     }
   }
 }
