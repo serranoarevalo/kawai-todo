@@ -44,6 +44,7 @@ class ToDo extends React.Component {
               multiline={true}
               onChangeText={this._controlText}
               onEndEditing={this._endEditing}
+              underlineColorAndroid="transparent"
               value={toDo}
               style={[
                 styles.text,

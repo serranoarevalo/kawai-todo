@@ -56,6 +56,7 @@ class App extends React.Component {
             style={styles.newToDo}
             blurOnSubmit={true}
             autoCorrect={false}
+            underlineColorAndroid="transparent"
           />
           <ScrollView contentContainerStyle={styles.toDoList}>
             {Object.values(toDos)
