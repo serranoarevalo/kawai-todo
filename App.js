@@ -60,6 +60,7 @@ class App extends React.Component {
                   uncomplete={this._uncompleteToDo}
                   complete={this._completeToDo}
                   key={toDo.id}
+                  updateToDo={this._updateToDo}
                   {...toDo}
                 />
               ))}
@@ -144,6 +145,19 @@ class App extends React.Component {
   };
   _saveState = newToDos => {
     const saveState = AsyncStorage.setItem("toDos", JSON.stringify(newToDos));
+  };
+  _updateToDo = (id, text) => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        toDos: {
+          ...prevState.toDos,
+          [id]: { ...prevState.toDos[id], text }
+        }
+      };
+      this._saveState(newState.toDos);
+      return { ...newState };
+    });
   };
 }
 
