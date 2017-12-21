@@ -16,24 +16,38 @@ class ToDo extends React.Component {
     const { id, text, isCompleted, uncomplete, complete } = this.props;
     return (
       <View style={styles.container}>
-        <TouchableOpacity
-          onPressOut={() => (isCompleted ? uncomplete(id) : complete(id))}
-        >
-          <View
+        <View style={styles.column}>
+          <TouchableOpacity
+            onPressOut={() => (isCompleted ? uncomplete(id) : complete(id))}
+          >
+            <View
+              style={[
+                styles.radio,
+                isCompleted ? styles.radioComplete : styles.radioUncomplete
+              ]}
+            />
+          </TouchableOpacity>
+          <Text
             style={[
-              styles.radio,
-              isCompleted ? styles.radioComplete : styles.radioUncomplete
+              styles.text,
+              isCompleted ? styles.completedText : styles.uncompletedText
             ]}
-          />
-        </TouchableOpacity>
-        <Text
-          style={[
-            styles.text,
-            isCompleted ? styles.completedText : styles.uncompletedText
-          ]}
-        >
-          {text}
-        </Text>
+          >
+            {text}
+          </Text>
+        </View>
+        <View style={styles.actions}>
+          <TouchableOpacity>
+            <View style={styles.actionContainer}>
+              <Text style={styles.actionText}>✏️</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <View style={styles.actionContainer}>
+              <Text style={styles.actionText}>❌</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -51,8 +65,7 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: "600",
     fontSize: 20,
-    marginVertical: 20,
-    flex: 1
+    marginVertical: 20
   },
   uncompletedText: { color: "#353839" },
   completedText: { color: "#bbb", textDecorationLine: "line-through" },
@@ -68,6 +81,20 @@ const styles = StyleSheet.create({
   },
   radioUncomplete: {
     borderColor: "#F23657"
+  },
+  column: {
+    width: width / 2,
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  actions: {
+    flexDirection: "row"
+  },
+  actionContainer: {
+    marginHorizontal: 5
+  },
+  actionText: {
+    fontSize: 15
   }
 });
 

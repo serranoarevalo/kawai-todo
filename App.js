@@ -29,7 +29,6 @@ class App extends React.Component {
     };
   }
   componentDidMount() {
-    AsyncStorage.removeItem("toDos");
     this._loadTodos();
   }
   render() {
