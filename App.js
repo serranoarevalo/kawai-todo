@@ -57,10 +57,11 @@ class App extends React.Component {
               .reverse()
               .map(toDo => (
                 <ToDo
+                  key={toDo.id}
                   uncomplete={this._uncompleteToDo}
                   complete={this._completeToDo}
-                  key={toDo.id}
                   updateToDo={this._updateToDo}
+                  deleteToDo={this._deleteToDo}
                   {...toDo}
                 />
               ))}
@@ -154,6 +155,18 @@ class App extends React.Component {
           ...prevState.toDos,
           [id]: { ...prevState.toDos[id], text }
         }
+      };
+      this._saveState(newState.toDos);
+      return { ...newState };
+    });
+  };
+  _deleteToDo = id => {
+    this.setState(prevState => {
+      const toDos = prevState.toDos;
+      delete toDos[id];
+      const newState = {
+        ...prevState,
+        ...toDos
       };
       this._saveState(newState.toDos);
       return { ...newState };

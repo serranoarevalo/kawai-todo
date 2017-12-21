@@ -17,7 +17,14 @@ class ToDo extends React.Component {
   };
   static propTypes = {};
   render() {
-    const { id, text, isCompleted, uncomplete, complete } = this.props;
+    const {
+      id,
+      text,
+      isCompleted,
+      uncomplete,
+      complete,
+      deleteToDo
+    } = this.props;
     const { isEditing, toDo } = this.state;
     return (
       <View style={styles.container}>
@@ -70,7 +77,12 @@ class ToDo extends React.Component {
                 <Text style={styles.actionText}>✏️</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPressOut={event => {
+                event.stopPropagation();
+                deleteToDo(id);
+              }}
+            >
               <View style={styles.actionContainer}>
                 <Text style={styles.actionText}>❌</Text>
               </View>
