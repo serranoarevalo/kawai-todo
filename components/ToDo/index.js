@@ -80,7 +80,8 @@ class ToDo extends React.Component {
       </View>
     );
   }
-  _startEditing = () => {
+  _startEditing = event => {
+    event.stopPropagation();
     const { text } = this.props;
     this.setState({
       isEditing: true,
@@ -92,7 +93,8 @@ class ToDo extends React.Component {
       toDo: text
     });
   };
-  _endEditing = () => {
+  _endEditing = event => {
+    event.stopPropagation();
     const { toDo } = this.state;
     const { updateToDo, id } = this.props;
     updateToDo(id, toDo);
